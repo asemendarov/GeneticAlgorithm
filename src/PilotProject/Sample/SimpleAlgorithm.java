@@ -1,6 +1,6 @@
-package Sample;
+package PilotProject.Sample;
 
-import Window.Controller;
+import PilotProject.Window.Controller;
 
 import java.util.ArrayList;
 import java.util.Random;

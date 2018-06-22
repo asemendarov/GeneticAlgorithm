@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PilotProject.Window.Controller">
+   <top>
+      <Label fx:id="labelInfo" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </BorderPane.margin></Label>
+   </top>
+   <right>
+       <VBox prefHeight="340.0" prefWidth="280.0" BorderPane.alignment="CENTER">
+           <BorderPane.margin>
+               <Insets right="5.0" />
+           </BorderPane.margin>
+         <TextArea fx:id="textResult" editable="false" prefHeight="519.0" prefWidth="200.0" />
+           <HBox prefHeight="37.0" prefWidth="236.0" spacing="5.0">
+               <VBox.margin>
+                   <Insets bottom="5.0" top="5.0"/>
+               </VBox.margin>
+               <Button fx:id="button" mnemonicParsing="false" onAction="#run" prefHeight="25.0" prefWidth="118.0"
+                       text="Start"/>
+               <Button mnemonicParsing="false" onAction="#cancel" prefHeight="25.0" prefWidth="122.0" text="Cancel"/>
+           </HBox>
+           <HBox prefHeight="94.0" prefWidth="236.0">
+               <TextField fx:id="textMin" prefHeight="25.0" prefWidth="79.0" promptText="min" text="0.010"/>
+               <TextField fx:id="textMax" prefHeight="25.0" prefWidth="77.0" promptText="max" text="0.025">
+                   <HBox.margin>
+                       <Insets left="5.0" right="5.0"/>
+                   </HBox.margin>
+               </TextField>
+               <TextField fx:id="textTimer" prefHeight="25.0" prefWidth="79.0" promptText="timer" text="1000"/>
+           </HBox>
+       </VBox>
+   </right>
+   <left>
+       <VBox prefHeight="573.0" prefWidth="654.0" BorderPane.alignment="CENTER">
+           <padding>
+               <Insets left="5.0" />
+           </padding>
+           <BorderPane.margin>
+               <Insets right="5.0" />
+           </BorderPane.margin>
+           <LineChart fx:id="lineChart" prefHeight="348.0" prefWidth="598.0">
+              <xAxis>
+                  <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                  <NumberAxis side="LEFT" />
+              </yAxis>
+           </LineChart>
+         <TextArea fx:id="textLog" editable="false" prefHeight="200.0" prefWidth="200.0" />
+       </VBox>
+   </left>
+</BorderPane>

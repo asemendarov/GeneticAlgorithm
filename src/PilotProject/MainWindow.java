@@ -1,20 +1,13 @@
+package PilotProject;
 
-import Sample.ListChromosome;
-import Sample.SimpleAlgorithm;
+import PilotProject.Sample.ListChromosome;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.opencv.core.Core;
-
-import java.io.IOException;
 
 public class MainWindow extends Application {
-
-    static {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-    }
 
     public static void main(String[] args) {
         launch(args);
@@ -31,7 +24,7 @@ public class MainWindow extends Application {
             getStylesheets().add(getClass().getResource("Window/application.css").toExternalForm());
         }});
 
-        Window.Controller controller = loader.getController();
+        PilotProject.Window.Controller controller = loader.getController();
         controller.setSimpleAlgorithm(new ListChromosome(){{
             add(-2, 0);
             add(-1, -2);

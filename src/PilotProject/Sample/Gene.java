@@ -1,4 +1,4 @@
-package Sample;
+package PilotProject.Sample;
 
 public class Gene {
     private double gene;
