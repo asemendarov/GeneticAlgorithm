@@ -1,4 +1,4 @@
-package Sample;
+package PilotProject.Sample;
 
 import java.util.ArrayList;
 import java.util.Comparator;

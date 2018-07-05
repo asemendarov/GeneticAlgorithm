@@ -1,4 +1,4 @@
-package Sample;
+package PilotProject.Sample;
 
 // Хромосома
 public class Chromosome {

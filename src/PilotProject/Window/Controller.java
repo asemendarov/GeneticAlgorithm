@@ -1,15 +1,13 @@
-package Window;
+package PilotProject.Window;
 
-import Sample.*;
+import PilotProject.Sample.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -123,9 +121,9 @@ public class Controller {
     private int indexLineChar = 0;
     private void updateLineChart(Chromosome chromosome){
         indexLineChar = indexLineChar + 1;
-        XYChart.Series series = (XYChart.Series) lineChart.getData().get(0);
+        XYChart.Series series = lineChart.getData().get(0);
         Platform.runLater(() -> {
-            series.getData().add(new XYChart.Data(indexLineChar, chromosome.getResult()));
+            series.getData().add(new XYChart.Data<>(indexLineChar, chromosome.getResult()));
         });
     }
 
