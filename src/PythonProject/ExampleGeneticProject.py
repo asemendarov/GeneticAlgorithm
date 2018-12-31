@@ -1,10 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-epoch = 30
-rarity_mutation = 50  # if rarity_mutation == 10 : 10%; if 100: 1%
-population_size = 80
-chromosome_size = 200
+epoch = 50
+rarity_mutation = 100
+population_size = 200
+chromosome_size = 64
 chromosome_min_value = 0
 chromosome_max_value = 79
 
@@ -69,12 +69,10 @@ def fitFunction(f_results, q=1):
     return fit_index
 
 
-def crossing_over_multiple_point(parent1, parent2, k=5):
+def crossing_over_multiple_point(parent1, parent2, k=1):
     chromosome = parent1
-    # even_block = 0  # [Test Data] [Test Data] [Test Data] [Test Data] [Test Data] [Test Data] [Test Data]
     even_block = np.random.randint(2)
     n = len(parent1) - 1
-    # rand_indexes = [1 - 1, 2 - 1] # [Test Data] [Test Data] [Test Data] [Test Data] [Test Data] [Test Data] [Test Data]
     rand_indexes = np.sort(np.unique(np.random.randint(n, size=(1, k))[0]))
     prev_index = 1
 
@@ -92,9 +90,8 @@ def crossing_over_multiple_point(parent1, parent2, k=5):
     return chromosome
 
 
-def mutation_multiple_point(chromosome, k=5):
+def mutation_multiple_point(chromosome, k=1):
     n = len(chromosome) - 1
-    # rand_indexes = [4 - 1, 7 - 1, 5 - 1, 1 - 1, 3 - 1] #  [Test Data] [Test Data] [Test Data] [Test Data]
     rand_indexes = np.random.randint(n, size=(1, k))[0]
     for i in range(0, k):
         x = chromosome[rand_indexes[i]]
@@ -127,13 +124,10 @@ def plot_pareto(f_results, pareto, ax, epoch_number):
 
 
 if __name__ == '__main__':
-    # Step 0
-    # population = [[0, 1, 1, 1, 0, 1, 0, 1],  #  [Test Data] [Test Data] [Test Data] [Test Data]
-    #               [0, 0, 0, 1, 0, 0, 1, 0],  #  [Test Data] [Test Data] [Test Data] [Test Data]
-    #               [1, 0, 1, 0, 1, 1, 1, 1],  #  [Test Data] [Test Data] [Test Data] [Test Data]
-    #               [0, 0, 0, 1, 0, 0, 1, 0]]  #  [Test Data] [Test Data] [Test Data] [Test Data]
-    # print(population)
 
+    ##
+    #   Step 0
+    ##
     epoch_index = 1
 
     while True:
@@ -143,20 +137,21 @@ if __name__ == '__main__':
             [R1, R2] = DecodeGrayToFloat(population[i], chromosome_min_value, chromosome_max_value, chromosome_size)
             f_results.append([f1(R1, R2), f2(R1, R2)])
 
-        # Step 2 — финтес функция
+        ##
+        #  Step 2. Финтес функция
+        ##
         fit_index = fitFunction(f_results)
         S = sum(fit_index)
         k = population_size
-        # rn = [1.0260, 0.8707, -0.3818, 0.4289]  # [Test Data] [Test Data] [Test Data] [Test Data]
         rn = np.random.uniform(size=(1, k))[0]
 
-        qqq = abs(min(rn))  # WHAT
-        for i in range(0, len(rn)):  # WHAT
-            rn[i] = rn[i] + qqq  # WHAT
+        qqq = abs(min(rn))
+        for i in range(0, len(rn)):
+            rn[i] = rn[i] + qqq
 
-        qqq = (S / max(rn))  # WHAT
-        for i in range(0, len(rn)):  # WHAT
-            rn[i] = rn[i] * qqq  # WHAT
+        qqq = (S / max(rn))
+        for i in range(0, len(rn)):
+            rn[i] = rn[i] * qqq
 
         parents = []
         for i in range(0, len(rn)):
@@ -169,38 +164,67 @@ if __name__ == '__main__':
                 rn0 = rn0 + fit_index[j]
             parents.append(population[k])
 
+        # Печать первой эпохи
         if epoch_index == 1:
             plot_pareto(f_results, fit_index, ax1, epoch_index)
 
+        # Печать последней
         if epoch_index == epoch:
             plot_pareto(f_results, fit_index, ax2, epoch_index)
 
-        # Step 3 Кросовер и мутация
+        ##
+        #  Step 3. Кросовер и мутация
+        ##
         childs = []
-        # index1 = [1 - 1, 4 - 1, 4 - 1, 1 - 1]  #  [Test Data] [Test Data] [Test Data] [Test Data] [Test Data] [Test Data]
-        # index2 = [1 - 1, 4 - 1, 2 - 1, 4 - 1]  #  [Test Data] [Test Data] [Test Data] [Test Data] [Test Data] [Test Data]
+
+        # Создаем список номеров возможных родителей (список одиночек)
+        parent1_list_index = [i for i in range(0, population_size)]
+        parent2_list_index = [i for i in range(0, population_size)]
+
+        # Приходимся по всем парам
         for i in range(0, population_size):
-            index1 = np.random.randint(len(parents))
-            index2 = np.random.randint(len(parents))
+
+            # Случайно выбираем номера партнеров для скрещивания из списка одиночек
+            index1 = np.random.choice(parent1_list_index)
+            index2 = np.random.choice(parent2_list_index)
+
+            # Удаляем номера выбранных партнеров из списка одиночек
+            parent1_list_index.remove(index1)
+            parent2_list_index.remove(index2)
+
+            # Находим будущих родителей по номеру и запоминаем их
             parent1 = np.copy(parents[index1])
             parent2 = np.copy(parents[index2])
+
+            # Скрещиваем их геном
             chromosome = crossing_over_multiple_point(parent1, parent2)
 
-            if np.random.randint(rarity_mutation) == 5:
+            # Подвергаем мутации
+            if np.random.randint(rarity_mutation) == 1:  # Вероятность мутации 1%, т. к. rarity_mutation = 100
                 chromosome = mutation_multiple_point(chromosome)
 
+            # Запоминаем полученный геном ребенка
             childs.append(chromosome)
 
-        # Step 4 — Инверсия
+        ##
+        #  Step 4. Инверсия
+        ##
         population = childs
 
-        # Step 5 Check Index and Print Result
+        ##
+        #  Step 5. Проверка индекса и фиксация результата
+        ##
+
+        # Вывод результатов на консоль
         print(epoch_index, 'f_results', np.copy(f_results).min(axis=0), sep='\t')
 
+        # Выходим из цикла по достижению необходимого числа эпох
         if not epoch_index < epoch:
             break
 
+        # Циклическое инкриминирование эпохи
         epoch_index = epoch_index + 1
 
+    # Выводим график на печать
     plt.grid()
     plt.show()
